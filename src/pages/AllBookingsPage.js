@@ -29,6 +29,7 @@ class AllBookingsPage extends React.Component {
             endDate: '',
             orFilter: false,
             printerFlag: false,
+            filterConditions: {}
         };
 
         this.setWrapperRef = this.setWrapperRef.bind(this);
@@ -119,6 +120,28 @@ class AllBookingsPage extends React.Component {
             this.setState({ startDate: date }, () => this.applyFilter(6));
         else if (num === 1)
             this.setState({ endDate: date }, () => this.applyFilter(6));
+    }
+
+    onFilterChange(e) {
+        let filterConditions = this.state.filterConditions;
+        const fieldName = e.target.name;
+        filterConditions[fieldName] = e.target.value;
+        const bookings = this.state.bookings;
+        let filtered_bookings = [];
+
+        for (let i = 0; i < bookings.length; i++) {
+            let flag = true;
+
+            for (let fieldName in filterConditions) {
+                if (bookings[i][fieldName].toString().toLowerCase().indexOf(filterConditions[fieldName]) === -1)
+                    flag = false;
+            }
+
+            if (flag)
+                filtered_bookings.push(bookings[i]);
+        }
+
+        this.setState({hasFilter: true, filtered_bookings: filtered_bookings});
     }
 
     applyFilter(num) {
@@ -330,6 +353,21 @@ class AllBookingsPage extends React.Component {
                                         <div className="table-responsive">
                                             <table className="table table-hover table-bordered sortable">
                                                 <thead className="thead-light">
+                                                    <tr className="filter">
+                                                        <th scope="col"><input type="text" name="id" onChange={(e) => {this.onFilterChange(e);}} /></th>
+                                                        <th scope="col"><input type="text" name="b_bookingID_Visual" onChange={(e) => {this.onFilterChange(e);}} /></th>
+                                                        <th scope="col"><input type="text" name="b_dateBookedDate" onChange={(e) => {this.onFilterChange(e);}} /></th>
+                                                        <th scope="col"><input type="text" name="puPickUpAvailFrom_Date" onChange={(e) => {this.onFilterChange(e);}} /></th>
+                                                        <th scope="col"><input type="text" name="b_clientReference_RA_Numbers" onChange={(e) => {this.onFilterChange(e);}} /></th>
+                                                        <th scope="col"><input type="text" name="b_status" onChange={(e) => {this.onFilterChange(e);}} /></th>
+                                                        <th scope="col"><input type="text" name="vx_freight_provider" onChange={(e) => {this.onFilterChange(e);}} /></th>
+                                                        <th scope="col"><input type="text" name="vx_serviceName" onChange={(e) => {this.onFilterChange(e);}} /></th>
+                                                        <th scope="col"><input type="text" name="s_05_LatestPickUpDateTimeFinal" onChange={(e) => {this.onFilterChange(e);}} /></th>
+                                                        <th scope="col"><input type="text" name="s_06_LatestDeliveryDateTimeFinal" onChange={(e) => {this.onFilterChange(e);}} /></th>
+                                                        <th scope="col"><input type="text" name="v_FPBookingNumber" onChange={(e) => {this.onFilterChange(e);}} /></th>
+                                                        <th scope="col"><input type="text" name="puCompany" onChange={(e) => {this.onFilterChange(e);}} /></th>
+                                                        <th scope="col"><input type="text" name="deToCompanyName" onChange={(e) => {this.onFilterChange(e);}} /></th>
+                                                    </tr>
                                                     <tr>
                                                         <th scope="col">Booking Id</th>
                                                         <th scope="col">BookingID Visual</th>
